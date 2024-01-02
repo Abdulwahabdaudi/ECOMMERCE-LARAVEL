@@ -17,10 +17,10 @@ class PosController extends Controller
     {
         $products = Product::all();
         $user = User::find(1);
-        $result = $user->products()->get();
+        $cartProducts = $user->products()->get();
         return Inertia::render('admin/Pos', [
             'products' => $products,
-            'result' => $result
+            'cartProducts' => $cartProducts
         ]);
     }
 
@@ -56,9 +56,12 @@ class PosController extends Controller
             $cart->pivot->save();
         } else {
             if($product->quantity < 1) {
-                return response([
-                    'message' => 'Product out of stock',
-                ], 400);
+                return redirect()->back()->withErrors(
+                    [
+                        'message' => 'Product out of stock',
+                     ]  
+                    );
+           
             }
             $user->products()->attach($product->id, ['quantity' => 1, 'name' => $product->name, 'price' => $product->price]);
         }
@@ -72,13 +75,42 @@ class PosController extends Controller
     public function change(Request $request)
     {
         $user = User::find(1);
+        $product = Product::where('id',$request->product_id)->first();
 
         $cart = $user->products()->where('id', $request->product_id)->first();
-//dd($cart);
+
         if ($cart) {
-            $cart->pivot->quantity = $request->quantity;
-            $cart->pivot->save();
+            if($product->quantity <= $request->quantity - 1) {
+                return redirect()->back()->withErrors(
+                    [
+                           'message' => 'Product available only: '. $product->quantity,
+                     ]  
+                    );
+          
         }
+        $cart->pivot->quantity = $request->quantity;
+        $cart->pivot->price = $request->quantity * $product->price;
+        $cart->pivot->save();
+    }
+}
+
+
+    
+
+    public function deleteOne (Request $request)
+    {
+        $user = User::find(1);
+dd($request);
+        $user->products()->detach($request->products_id);
+
+
+  
+    }
+    public function empty ()
+    {
+        $user = User::find(1);
+
+       $user->products()->detach();
     }
 
     /**
@@ -110,6 +142,7 @@ class PosController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $user = User::find(1);
+                $user->products()->detach($id);
     }
 }

@@ -37,7 +37,9 @@ Route::get('/admin/dashboard', function () {
 });
 Route::get('/admin/pos', [PosController::class, 'index'])->name('admin.pos');
 Route::post('/admin/pos', [PosController::class, 'store']);
-Route::post('/admin/pos', [PosController::class, 'change']);
+Route::post('/admin/pos/change', [PosController::class, 'change']);
+Route::delete('/admin/pos/delete/{product}', [PosController::class, 'destroy']);
+Route::delete('/admin/pos/empty', [PosController::class, 'empty']);
 
 
 

@@ -161,11 +161,11 @@ export default {
         <div class="mb-3">
           <label for="quantity" class="form-label">Product Quantity</label>
           <input id="quantity" v-model="form.quantity" type="number" class="form-control" name="quantity"
-            placeholder="Enter product quantity...." required />
+            placeholder="Enter product quantity...."  onkeypress="return event.charCode>=48" min="1" required />
         </div>
         <div class="mb-3">
           <label for="price" class="form-label">Product Price</label>
-          <input id="price" v-model="form.price" type="decimal" class="form-control" name="price"
+          <input id="price" v-model="form.price" type="number" step="0.01" min="1" class="form-control" name="price"
             placeholder="Enter product price...." required />
         </div>
         <div class="mb-3">

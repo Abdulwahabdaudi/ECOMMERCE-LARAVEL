@@ -21,7 +21,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-         $products = Product::latest()->filter(request(['search']))->paginate(2);
+         $products = Product::latest()->filter(request(['search']))->paginate();
 
        
         return Inertia::render('admin/Product', ['products' => $products]);
