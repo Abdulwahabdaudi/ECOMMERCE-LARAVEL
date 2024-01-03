@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
+use App\Models\User;
+use Inertia\Inertia;
 use App\Models\Order;
+use Illuminate\Http\Request;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 
@@ -13,7 +17,11 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //
+        $orders = Order::latest()->get();
+
+        return Inertia::render('admin/Order', ['orders' => $orders]);
+
+       
     }
 
     /**
@@ -27,9 +35,26 @@ class OrderController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreOrderRequest $request)
+    public function store(Request $request)
     {
-        //
+        $user = User::find(1);
+        $order = Order::create([
+            'user_id' => 1,
+            'amount'  => $request->totalPrice
+
+        ]);
+
+        $cart = $user->products()->get();
+        foreach ($cart as $item) {
+            $order->items()->create([
+                'price' => $item->price * $item->pivot->quantity,
+                'quantity' => $item->pivot->quantity,
+                'product_id' => $item->id,
+            ]);
+            $item->quantity = $item->quantity - $item->pivot->quantity;
+            $item->save();
+        }
+        $user->products()->detach();
     }
 
     /**
@@ -61,6 +86,11 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-        //
+       
+
+
+           $order->delete();
+            return to_route('admin.order',);
+    
     }
 }

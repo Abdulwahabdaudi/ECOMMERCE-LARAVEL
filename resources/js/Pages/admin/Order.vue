@@ -37,7 +37,7 @@ export default {
     };
   },
   props: {
-    products: Object
+    orders: Object
   },
   mounted() {
     Array.from(document.querySelectorAll('button[data-bs-toggle="popover"]')).forEach(popoverNode => new Popover(popoverNode))
@@ -77,7 +77,7 @@ export default {
         }
       }).fire({
         icon: 'success',
-        title: 'Product ' + message + ' success'
+        title: 'Order ' + message + ' success'
       })
     },
 
@@ -126,7 +126,7 @@ export default {
         confirmButtonText: "YES"
       }).then((result) => {
         if (result.isConfirmed) {
-          router.delete(`/admin/product/${id}`, {
+          router.delete(`/admin/order/${id}`, {
             onSuccess: () => {
               this.submitSuccess('Deleted')
             },
@@ -137,9 +137,9 @@ export default {
         }
       })
     },
-    search(searchData) {
-      router.get(`/admin/product/?search=${searchData}`)
-    },
+    // search(searchData) {
+    //   router.get(`/admin/order/?search=${searchData}`)
+    // },
   },
 }
 </script>
@@ -184,7 +184,7 @@ export default {
         <Card class="">
           <template v-slot:head>
             <div class="d-flex justify-content-between align-item-center">
-              <div class="my-auto">PRODUCTS</div>
+              <div class="my-auto">ORDERS</div>
               <div>
                 <form @submit.prevent="search(searchData)">
                   <div class="input-group">
@@ -195,8 +195,9 @@ export default {
                 </form>
 
 
-              </div><button @click="showModal('add')" class="btn btn-success px-2">
-                <i class="bi bi-plus-lg me-2 "></i>ADD</button>
+              </div>
+              <!-- <button @click="showModal('add')" class="btn btn-success px-2">
+                <i class="bi bi-plus-lg me-2 "></i>ADD</button> -->
             </div>
           </template>
           <template v-slot:body>
@@ -204,27 +205,26 @@ export default {
               <template v-slot:head>
 
                 <td>S/N</td>
-                <td>Name</td>
-                <td>Quantity</td>
-                <td>Price</td>
+                <td>Amount</td>
+                <td>Status</td>
+               
                 <td>Action</td>
               </template>
               <template v-slot:body>
-                <tr v-show="products.length == 0" class="text-center w-100">
-                  <td colspan="5">No Product Exist</td>
+                <tr v-show="orders.length == 0" class="text-center w-100">
+                  <td colspan="5">No Order Exist</td>
                 </tr>
-                <tr v-for="(product, index) in products.data " :key="product.id">
+                <tr v-for="(order, index) in orders " :key="order.id">
                   <td>{{ index +1 }}</td>
-                  <td>{{ product.name.toUpperCase() }} </td>
-                  <td>{{ product.quantity }}</td>
-                  <td>{{ product.price }} Tsh</td>
+                  <td>{{ order.amount }} Tsh</td>
+                  <td>{{ order.status }}</td>
                   <td class="d-flex justify-content-center gap-2">
-                    <button @click="remove(product.id)" class="btn btn-danger" data-bs-toggle="popover"
+                    <button @click="remove(order.id)" class="btn btn-danger" data-bs-toggle="popover"
                       data-bs-trigger="hover" data-bs-placement="bottom" data-bs-title="Delete"><i
                         class="bi bi-trash"></i></button>
-                    <button @click="showModal(product)" class="btn btn-primary" data-bs-toggle="popover"
+                    <!-- <button @click="showModal(orders)" class="btn btn-primary" data-bs-toggle="popover"
                       data-bs-trigger="hover" data-bs-placement="bottom" data-bs-title="Update">
-                      <i class="bi bi-arrow-repeat"></i></button>
+                      <i class="bi bi-arrow-repeat"></i></button> -->
                   </td>
                 </tr>
 
@@ -234,7 +234,7 @@ export default {
           </template>
           <template v-slot:footer>
 
-            <!-- <Pagination :links="products.links" /> -->
+            <!-- <Pagination :links="orders.links" /> -->
 
           </template>
 

@@ -219,6 +219,12 @@ nav .sidebar-toggle {
 .content .card.customer .card-header {
   background-color: rgb(32, 54, 182);
 }
+.card.orders {
+  background-color: rgba(194, 216, 67, 0.767);
+}
+.content .card.orders .card-header {
+  background-color: rgb(126, 128, 26);
+}
 
 main footer {
   display: flex;

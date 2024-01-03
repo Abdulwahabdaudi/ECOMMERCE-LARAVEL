@@ -32,6 +32,9 @@ export default {
                 <Link :href="route('admin.product')" :class="{ 'active': $page.url.startsWith('/admin/product') }">
                 <li>Product</li>
                 </Link>
+                <Link :href="route('admin.order')" :class="{ 'active': $page.url.startsWith('/admin/order') }">
+                <li>Order</li>
+                </Link>
             </ul>
         </div>
     </aside>

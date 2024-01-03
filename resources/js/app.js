@@ -8,6 +8,7 @@ import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 
 import VueSweetalert2 from 'vue-sweetalert2';
 import * as bootstrap from 'bootstrap'
+//import Chart from 'Chart.js/auto'
 
 import 'sweetalert2/dist/sweetalert2.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css'

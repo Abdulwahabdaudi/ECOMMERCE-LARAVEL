@@ -16,7 +16,9 @@ export default {
                 product_id: null,
                 quantity: null
             },
-
+            orderData: {
+                totalPrice: null
+            }
         }
     },
     components: {
@@ -127,8 +129,20 @@ export default {
             }, 0);
 
 
-        }
+        },
+        createOrder(){
+            this.orderData.totalPrice = this.total().toFixed(2)
+            console.log(this.totalPrice);
+            router.post('/admin/order', this.orderData, {
+                onSuccess: () => {
+                    this.submitSuccess('Order')
+                },
+                onError: (error) => {
+                    this.submitError(error.message)
+                },
+        })
     }
+}
 }
 </script>
 
@@ -217,7 +231,7 @@ export default {
                                 </button>
                             </div>
                             <div class="d-flex justify-content-between m-2 gap-2 ">
-                                <button class="btn btn-success">ADD ORDER</button>
+                                <button class="btn btn-success" @click="createOrder()">ADD ORDER</button>
                                 <button class="btn btn-danger" @click="empty()">CLEAR ALL</button>
                             </div>
                         </div>

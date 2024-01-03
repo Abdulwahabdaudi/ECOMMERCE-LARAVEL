@@ -20,6 +20,7 @@
     },
     "dependencies": {
         "bootstrap": "^5.3.2",
+        "chartjs": "^0.3.24",
         "vue-router": "^4.2.5"
     }
 }

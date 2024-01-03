@@ -1,6 +1,7 @@
 <script>
 import { Popover , Modal} from 'bootstrap';
-import Table from '../../components/Table.vue';
+
+//import Table from '../../components/Table.vue';
 import Layout from '../../Layouts/Layout.vue';
 import Card from '../../Components/Card.vue'
 import ModalComponent from '../../Components/ModalComponent.vue';
@@ -8,7 +9,7 @@ export default {
   components: {
     Layout,
     Card,
-    Table,
+    // Table,
     ModalComponent
   },
   data() {
@@ -24,9 +25,18 @@ export default {
     methods: {
         showModal() {
                this.modal.show()            
+            },
+            sales(){
+             return this.totalSales.reduce((acc,value) => {
+                return (acc + value.amount)
+              },0)
             }
     },
-
+    props: {
+      totalProducts:Number,
+      totalOrders:Number,
+      totalSales:Array
+  },
 
 }
 </script>
@@ -39,10 +49,10 @@ export default {
       <div class="col">
         <Card class="product">
           <template v-slot:head>
-            PROODUCTS
+            PRODUCTS
           </template>
           <template v-slot:body>
-            <p class="">200</p>
+            <p class="ms-2">{{totalProducts}}</p>
           </template>
         </Card>
       </div>
@@ -52,7 +62,7 @@ export default {
             SALES
           </template>
           <template v-slot:body>
-            <p class="">200</p>
+            <p class="ms-2">{{sales()}} Tsh</p>
           </template>
         </Card>
       </div>
@@ -62,7 +72,7 @@ export default {
             CUSTOMERS
           </template>
           <template v-slot:body>
-            <p class="">200</p>
+            <p class="ms-2">20</p>
           </template>
         </Card>
       </div>
@@ -72,12 +82,17 @@ export default {
             ORDERS
           </template>
           <template v-slot:body>
-            <p class="">200</p>
+            <p class="ms-2">{{totalOrders}}</p>
           </template>
         </Card>
       </div>
     </div>
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-2">
+
+
+
+
+
+    <!-- <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-2">
      
       <div class="col">
         <Card class="orders">
@@ -166,7 +181,7 @@ export default {
    
 
 
-    </div>
+    </div> -->
   </Layout>
 </template>
 
