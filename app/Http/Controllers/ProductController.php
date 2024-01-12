@@ -40,6 +40,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+       // dd($request);
         $formFields = $request->validate([
             'name' => 'required|unique:products,name',
             'quantity' => 'required',
@@ -48,6 +49,9 @@ class ProductController extends Controller
             'status' => 'required'
 
         ]);
+        if ($request->hasFile('image')) {
+            $formFields['image'] = $request->file('image')->store('Image', 'public');
+        }
 
         $isCreated = Product::create($formFields);
         if (!$isCreated) {
@@ -76,6 +80,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+        //dd($request);
         $formFields = $request->validate([
             'name' => 'required',
             'quantity' => 'required',
@@ -84,6 +89,10 @@ class ProductController extends Controller
             'status' => 'required'
 
         ]);
+
+        if ($request->hasFile('image')) {
+            $formFields['image'] = $request->file('image')->store('Image', 'public');
+        }
 
         $isCreated = $product->update($formFields);
         if (!$isCreated) {

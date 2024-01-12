@@ -28,10 +28,12 @@ export default {
     },
     props: {
         products: Object,
-        cartProducts: Array
+        cartProducts: Array,
+        message: String
     },
     mounted() {
         this.cartProducts
+        console.log(this.message);
     },
 
     methods: {
@@ -40,7 +42,7 @@ export default {
                 toast: true,
                 position: 'top-end',
                 showConfirmButton: false,
-                timer: 3000,
+                timer: 1000,
                 timerProgressBar: true,
                 didOpen: (toast) => {
                     toast.onmouseenter = this.$swal.stopTimer;
@@ -128,26 +130,51 @@ export default {
                 return acc + curr.pivot.price
             }, 0);
 
+        },
+        receipt() {
+            window.open('/1')
+//              fetch('/',{
+// //                 method : "POST",
+// // body: JSON.stringify({
+// //     name: 'abdul',
+// //     headers: {
+// //         "Content-type": "application/json; charset=UTF-8"
+// //     }
+// // })
+//              })
+//              .then((response)=> response.json()).then(data => console.log(data))
 
         },
-        createOrder(){
+        createOrder() {
             this.orderData.totalPrice = this.total().toFixed(2)
-            console.log(this.totalPrice);
+            console.log(this.orderData);
             router.post('/admin/order', this.orderData, {
                 onSuccess: () => {
                     this.submitSuccess('Order')
+                   this.$swal({
+                     title: "Do you need receipt?",
+                     showCancelButton: true,
+                     confirmButtonText: "YES",
+                     cancelButtonText: "NO"
+                    }).then((result) => {
+                    if(result.isConfirmed){
+                        window.open('/',"_self") 
+                    }
+                  
+})
                 },
                 onError: (error) => {
                     this.submitError(error.message)
                 },
-        })
+            })
+        }
     }
-}
 }
 </script>
 
 <template>
     <Layout>
+        <button type="button" @click="recept()" class="btn btn-primary"><a href="/1">button</a></button>
         <div class="row">
             <div class="col-8">
                 <Card class="cart">
@@ -155,19 +182,19 @@ export default {
                         PRODUCT
                     </template>
                     <template v-slot:body>
-                        <div class="row row-cols-lg-4 ">
+                        <div class="row row-cols-lg-4 g-1 m-1 ">
 
                             <div class="col " v-for="product in products" :key="product.id">
-                                <Card class="cart">
+                                <Card class="cart h-100 " @click="submit(product.id)">
                                     <template v-slot:head>
-                                        <h5 class="">{{ product.name }}</h5>
+                                        <h5 class="text-truncate">{{ product.name }}</h5>
                                     </template>
                                     <template v-slot:body>
 
-                                        <img class="d-flex w-50 h-75 border border-primary border-3 mx-auto my-2"
-                                            src="../../../../public/logo.jpg" alt="">
+                                        <img class="d-flex w-50  border border-primary border-2 mx-auto my-2"
+                                            :src="!product.image ? '/logo.jpg' : `/storage/${product.image}`" alt="">
 
-                                        <h5 class="price text-center">{{ product.price }} TSH</h5>
+                                        <h5 class="price text-center text-truncate">{{ product.price }} TSH</h5>
                                         <button class="d-flex btn btn-primary mx-auto mb-2" @click="submit(product.id)">ADD
                                             TO CART</button>
                                     </template>
@@ -199,13 +226,14 @@ export default {
                                 </tr>
                                 <tr v-for="res, index in cartProducts" :key="cartProducts.id">
                                     <td>{{ index + 1 }}</td>
-                                    <td>{{ res.pivot.name }}</td>
+                                    <td class="">{{ res.pivot.name }}</td>
                                     <td class="cart_quantity ">
                                         <div class="">
                                             <!--     "                           -->
                                             <form @submit.prevent>
                                                 <input class="form-control form-control-sm" type="number" min="1"
-                                                     onkeypress="return event.charCode>=48 event.charCode=13" v-model="res.pivot.quantity"
+                                                    onkeypress="return event.charCode>=48 event.charCode=13"
+                                                    v-model="res.pivot.quantity"
                                                     @change="change(res.pivot.quantity, res.id, index)">
                                             </form>
                                         </div>

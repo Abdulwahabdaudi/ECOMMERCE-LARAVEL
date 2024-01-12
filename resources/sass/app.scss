@@ -82,7 +82,7 @@ grids {
 /* ---------------SIDE BAR-------------------- */
 aside {
   height: 100%;
-  width: 13rem;
+  width: 12rem;
   background-color: var(--color-primary);
   position: fixed;
   
@@ -157,7 +157,7 @@ main {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  margin-left: 14rem;
+  margin-left: 12.5rem;
 }
 
 nav {
@@ -243,6 +243,15 @@ img {
   // background-repeat: no-repeat;
   // background-size: cover;
   border-radius: 50%;
+}
+.cart img {
+  // background-image: url('../public/logo.jpg');
+  height: 80px;
+  width: 30px;
+  // background-position: center;
+  // background-repeat: no-repeat;
+  // background-size: cover;
+  border-radius: 1rem;
 }
 .card {
   border-radius: 1rem;

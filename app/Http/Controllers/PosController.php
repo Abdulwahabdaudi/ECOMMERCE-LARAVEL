@@ -100,7 +100,7 @@ class PosController extends Controller
     public function deleteOne (Request $request)
     {
         $user = User::find(1);
-dd($request);
+//dd($request);
         $user->products()->detach($request->products_id);
 
 
@@ -112,6 +112,10 @@ dd($request);
 
        $user->products()->detach();
     }
+
+
+
+    
 
     /**
      * Display the specified resource.

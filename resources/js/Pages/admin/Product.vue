@@ -2,6 +2,7 @@
 
 <script>
 import { router } from '@inertiajs/vue3'
+import { useForm } from '@inertiajs/vue3'
 import { Link } from '@inertiajs/vue3'
 import { Popover, Modal, Toast } from 'bootstrap';
 import Table from '../../Components/Table.vue';
@@ -22,14 +23,16 @@ export default {
     return {
       modal: '',
       closeIt: true,
-      form: {
+      form:{
+        _method: 'PUT',
         id: null,
         name: null,
         quantity: null,
         price: null,
         description: null,
-        status: 'unverified'
-      },
+        image: null,
+        status: 'unverified'}
+      ,
       title: '',
       submitButton: '',
       searchData: ''
@@ -92,7 +95,8 @@ export default {
     ,
     submit(data) {
       if (data == null) {
-        router.post('/admin/product', this.form, {
+        this.form._method = 'POST'
+       router.post('/admin/product',this.form, {
           onSuccess: () => {
             this.modal.toggle(),
               this.submitSuccess('Added')
@@ -104,7 +108,9 @@ export default {
 
 
       } else {
-        router.put(`/admin/product/${data}`, this.form, {
+        router.post(`/admin/product/${data}`, this.form, {
+          image: this.form.image,
+          
           onSuccess: () => {
             this.modal.toggle(),
               this.formState(null, null, null, null, null)
@@ -173,7 +179,13 @@ export default {
           <textarea id="description" v-model="form.description" type="text" row="2" class="form-control"
             name="description" placeholder="Enter product description...." required></textarea>
         </div>
+        <div class="mb-3">
+          <label for="image" class="form-label">Product Image</label>
+          <input id="image" @input="form.image = $event.target.files[0]" type="file" row="2" class="form-control"
+            name="image"/>
+        </div>
         <input id="status" type="hidden" name="status" value="unverified">
+        <progress v-if="form.progress" :value="form.progress.percentage" max="100">{{ form.progress.percentage }}</progress>
         <button type="submit" class="btn btn-primary w-100" name="submit">{{ submitButton }}</button>
       </form>
     </ModalComponent>

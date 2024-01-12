@@ -62,7 +62,7 @@ export default {
             SALES
           </template>
           <template v-slot:body>
-            <p class="ms-2">{{sales()}} Tsh</p>
+            <p class="ms-2">{{sales().toFixed(2)}} Tsh</p>
           </template>
         </Card>
       </div>

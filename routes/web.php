@@ -11,12 +11,22 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\DashboardController;
+use Barryvdh\DomPDF\Facade\PDF;
 
 Route::get('/', function(){
-    $pdf = App::make('dompdf.wrapper');
-    $pdf->loadHTML('<h1>Test</h1>');
-    return $pdf->stream();
-});
+          $order = Order::latest()->get();
+
+        $cart =  $order[0]->items()->get();
+      //  dd($cart);
+
+
+
+
+      
+    $pdf = PDF::loadView('receipt', ['cart'=> $cart])->setPaper([0,0,164,847], 'portrait');
+   //$pdf =  PDF::loadHTML('receipt');
+   return $pdf->stream();
+})->name('index');
 
 
 
@@ -59,8 +69,8 @@ Route::delete('/admin/pos/empty', [PosController::class, 'empty']);
 
 
 Route::get('/admin/product', [ProductController::class, 'index'])->name('admin.product');
-Route::post('/admin/product', [ProductController::class, 'store'])->name('admin.product.store');
 Route::put('/admin/product/{product}', [ProductController::class, 'update'])->name('admin.product.update');
+Route::post('/admin/product', [ProductController::class, 'store'])->name('admin.product.store');
 Route::delete('/admin/product/{product}', [ProductController::class, 'destroy'])->name('admin.product.destroy');
 
 

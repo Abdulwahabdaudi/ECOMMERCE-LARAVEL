@@ -6,6 +6,7 @@ use Exception;
 use App\Models\User;
 use Inertia\Inertia;
 use App\Models\Order;
+use Barryvdh\DomPDF\Facade\PDF;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
@@ -47,6 +48,7 @@ class OrderController extends Controller
         $cart = $user->products()->get();
         foreach ($cart as $item) {
             $order->items()->create([
+                'name' => $item->name,
                 'price' => $item->price * $item->pivot->quantity,
                 'quantity' => $item->pivot->quantity,
                 'product_id' => $item->id,
@@ -55,6 +57,7 @@ class OrderController extends Controller
             $item->save();
         }
         $user->products()->detach();
+
     }
 
     /**

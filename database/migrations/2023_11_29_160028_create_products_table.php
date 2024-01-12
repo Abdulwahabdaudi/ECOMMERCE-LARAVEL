@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->integer('quantity');
             $table->float('price');
-            $table->string('photo_url')->nullable();
+            $table->string('image')->nullable();
             $table->longText('description');
             $table->string('status');
             $table->timestamps();
