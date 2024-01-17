@@ -6,8 +6,9 @@ use Exception;
 use App\Models\User;
 use Inertia\Inertia;
 use App\Models\Order;
-use Barryvdh\DomPDF\Facade\PDF;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Barryvdh\DomPDF\Facade\PDF;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 
@@ -21,8 +22,6 @@ class OrderController extends Controller
         $orders = Order::latest()->get();
 
         return Inertia::render('admin/Order', ['orders' => $orders]);
-
-       
     }
 
     /**
@@ -38,16 +37,20 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
+
+        $date = Carbon::now();
+        $day = $date->englishDayOfWeek;
         $user = User::find(1);
         $order = Order::create([
             'user_id' => 1,
-            'amount'  => $request->totalPrice
-
+            'amount'  => $request->totalPrice,
+            'day' => $day,
         ]);
 
         $cart = $user->products()->get();
         foreach ($cart as $item) {
             $order->items()->create([
+
                 'name' => $item->name,
                 'price' => $item->price * $item->pivot->quantity,
                 'quantity' => $item->pivot->quantity,
@@ -57,7 +60,6 @@ class OrderController extends Controller
             $item->save();
         }
         $user->products()->detach();
-
     }
 
     /**
@@ -89,11 +91,10 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-       
 
 
-           $order->delete();
-            return to_route('admin.order',);
-    
+
+        $order->delete();
+        return to_route('admin.order',);
     }
 }

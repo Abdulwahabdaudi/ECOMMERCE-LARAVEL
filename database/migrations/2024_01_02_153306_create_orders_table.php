@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
-
+            $table->string('customer_name')->default('Normal customer');
+            $table->string('day');
             $table->float('amount');
             $table->string('status')->default('paid');
 

@@ -1,41 +1,57 @@
 <script>
-import { Popover , Modal} from 'bootstrap';
+import { Popover, Modal } from 'bootstrap';
 
 //import Table from '../../components/Table.vue';
 import Layout from '../../Layouts/Layout.vue';
-import Card from '../../Components/Card.vue'
+import Card from '../../Components/Card.vue';
 import ModalComponent from '../../Components/ModalComponent.vue';
+import Barchart from '../../Components/Barchart.vue';
 export default {
   components: {
     Layout,
     Card,
     // Table,
-    ModalComponent
+    ModalComponent,
+    Barchart
   },
   data() {
-        return {
-            modal:''
-        };
-    },
-  mounted(){
-    Array.from(document.querySelectorAll('button[data-bs-toggle="popover"]')).forEach(popoverNode =>new Popover(popoverNode))
-    this.modal = new Modal(document.getElementById('modal'))
-
+    return {
+      modal: '',
+      chartData:{
+        datasets: {
+         data: null
+        } 
+      },
+      
+    };
   },
-    methods: {
-        showModal() {
-               this.modal.show()            
-            },
-            sales(){
-             return this.totalSales.reduce((acc,value) => {
-                return (acc + value.amount)
-              },0)
-            }
+  mounted() {
+    Array.from(document.querySelectorAll('button[data-bs-toggle="popover"]')).forEach(popoverNode => new Popover(popoverNode))
+    this.modal = new Modal(document.getElementById('modal'))
+    console.log(this.salesData);
+   this.chartData.datasets.data = this.totalSales.map((item) => {
+      const chartData = {}
+      chartData.x = item.id
+      chartData.y = item.amount
+      return chartData
+    })
+ 
+  },
+  methods: {
+    showModal() {
+      this.modal.show()
     },
-    props: {
-      totalProducts:Number,
-      totalOrders:Number,
-      totalSales:Array
+    sales() {
+      return this.totalSales.reduce((acc, value) => {
+        return (acc + value.amount)
+      }, 0)
+    }
+  },
+  props: {
+    totalProducts: Number,
+    totalOrders: Number,
+    totalSales:Array,
+    salesData: Object
   },
 
 }
@@ -44,7 +60,7 @@ export default {
 <template>
   <Layout>
 
-    <ModalComponent/>
+    <ModalComponent />
     <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4">
       <div class="col">
         <Card class="product">
@@ -52,7 +68,7 @@ export default {
             PRODUCTS
           </template>
           <template v-slot:body>
-            <p class="ms-2">{{totalProducts}}</p>
+            <p class="ms-2">{{ totalProducts }}</p>
           </template>
         </Card>
       </div>
@@ -62,7 +78,7 @@ export default {
             SALES
           </template>
           <template v-slot:body>
-            <p class="ms-2">{{sales().toFixed(2)}} Tsh</p>
+            <p class="ms-2">{{ sales().toFixed(2) }} Tsh</p>
           </template>
         </Card>
       </div>
@@ -82,7 +98,7 @@ export default {
             ORDERS
           </template>
           <template v-slot:body>
-            <p class="ms-2">{{totalOrders}}</p>
+            <p class="ms-2">{{ totalOrders }}</p>
           </template>
         </Card>
       </div>
@@ -92,96 +108,18 @@ export default {
 
 
 
-    <!-- <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-2">
-     
-      <div class="col">
-        <Card class="orders">
-          <template v-slot:head>
-            <div class="d-flex justify-content-between align-item-center">
-              <div class="my-auto">PRODUCTS</div> <button class="btn btn-success px-2">
-                <i class="bi bi-plus-lg me-2 "></i>ADD</button>
-            </div>
-          </template>
-          <template v-slot:body>
-            <Table>
-              <template v-slot:head>
+    <div class="row m-2">
 
-                <td>S/N</td>
-                <td>Name</td>
-                <td>Quantity</td>
-                <td>Price</td>
-                <td>Action</td>
-              </template>
-              <template v-slot:body>
-                <tr>
-                    <td></td>
-                <td>Lorem </td>
-                <td></td>
-                <td>Tsh</td>
-                <td class="d-flex justify-content-center gap-2">
-                  <button class="btn btn-danger"
-                  data-bs-toggle="popover"
-              data-bs-trigger="hover"
-              data-bs-placement="bottom"
-              data-bs-title="Delete"
-                  ><i class="bi bi-trash"></i></button>
-                  <button @click="showModal" class="btn btn-primary"
-                  data-bs-toggle="popover"
-              data-bs-trigger="hover"
-              data-bs-placement="bottom"
-              data-bs-title="Update">
-                  <i class="bi bi-arrow-repeat"></i></button>
-                </td>
-                </tr>
-              
-
-              </template>
-            </Table>
-          </template>
-        </Card>
+     <div class="card ">
+         <div class="col">
+        <Barchart :chartData="chartData" :salesData="salesData"/>
       </div>
-      <div class="col">
-        <Card class="orders">
-          <template v-slot:head>
-            <div class="d-flex justify-content-between align-item-center">
-              <div class="my-auto">PRODUCTS</div> <button class="btn btn-success px-2">
-                <i class="bi bi-plus-lg me-2 "></i>ADD</button>
-            </div>
-          </template>
-          <template v-slot:body>
-            <Table>
-              <template v-slot:head>
-
-                <tr>
-                    <td></td>
-                <td>Lorem </td>
-                <td></td>
-                <td>Tsh</td>
-                <td class="d-flex justify-content-center gap-2">
-                  <button class="btn btn-danger"
-                  data-bs-toggle="popover"
-              data-bs-trigger="hover"
-              data-bs-placement="bottom"
-              data-bs-title="Delete"
-                  ><i class="bi bi-trash"></i></button>
-                  <button @click="showModal" class="btn btn-primary"
-                  data-bs-toggle="popover"
-              data-bs-trigger="hover"
-              data-bs-placement="bottom"
-              data-bs-title="Update">
-                  <i class="bi bi-arrow-repeat"></i></button>
-                </td>
-                </tr>
-              </template>
-            </Table>
-          </template>
-        </Card>
-      </div>
-
+     </div>
    
 
 
-    </div> -->
+
+    </div>
   </Layout>
 </template>
 

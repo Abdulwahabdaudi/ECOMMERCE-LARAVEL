@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class DashboardController extends Controller
 {
@@ -14,17 +15,33 @@ class DashboardController extends Controller
      */
     public function index()
     {
-       $totalProducts = Product::get()->count();
-       $totalOrders = Order::get()->count();
-       $totalSales = Order::get();
-       
+        $totalProducts = Product::get()->count();
+        $totalOrders = Order::get()->count();
+        $totalSales = Order::get();
 
+        $date = Carbon::now()->subDays(7);
+        $orderData = Order::latest()->where('created_at', '>=', $date)->get();
+
+        $salesData = array();
+        foreach ($orderData as $data) {
+
+            $day = substr($data['day'], 0, 3);
+            $amount = $data['amount'];
+
+            if (isset($salesData[$day])) {
+                $salesData[$day]['amount'] += $amount;
+            } else {
+                $salesData[$day] = ['day' => $day, 'amount' => $amount];
+            }
+        }
 
         return Inertia::render('admin/Dashboard', [
-           'totalProducts' => $totalProducts ,
-           'totalOrders' => $totalOrders ,
-           'totalSales' => $totalSales ,
-            'pos' => route('admin.pos')]);
+            'totalProducts' => $totalProducts,
+            'totalOrders' => $totalOrders,
+            'totalSales' => $totalSales,
+            'salesData' => array_values($salesData),
+            'pos' => route('admin.pos')
+        ]);
     }
 
     /**

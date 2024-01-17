@@ -3,6 +3,8 @@
 
 use Inertia\Inertia;
 use App\Models\Order;
+use Illuminate\Support\Carbon;
+use Barryvdh\DomPDF\Facade\PDF;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PosController;
@@ -11,32 +13,30 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\DashboardController;
-use Barryvdh\DomPDF\Facade\PDF;
 
-Route::get('/', function(){
-          $order = Order::latest()->get();
+Route::get('/', function () {
 
-        $cart =  $order[0]->items()->get();
-      //  dd($cart);
+    $order = Order::latest()->get();
 
+    $cart =  $order[0]->items()->get();
 
+    $pdf = PDF::loadView('receipt', ['cart' => $cart])->setPaper([0, 0, 164, 447], 'portrait');
 
+    $pdf->setOptions(['isHtml5ParserEnabled' => true, 'isPhpEnabled' => true, 'isPhpEnabled' => true, 'isHtml5ParserEnabled' => true]);
+    $pdf->setOption('autoScriptToSize', true);
+    $pdf->render();
+    $height = $pdf->get_canvas()->get_height();
 
-      
-    $pdf = PDF::loadView('receipt', ['cart'=> $cart])->setPaper([0,0,164,847], 'portrait');
-   //$pdf =  PDF::loadHTML('receipt');
-   return $pdf->stream();
+    $pdf = PDF::loadView('receipt', ['cart' => $cart])->setPaper([0, 0, 164, $height], 'portrait');
+
+    $pdf->render();
+    return   $pdf->stream();
 })->name('index');
-
-
 
 
 
 //Route::get('/', [LoginController::class, 'create'])->name('login');
 Route::post('/', [LoginController::class, 'login']);
-
-
-
 
 
 Route::get('/register', [RegisterController::class, 'create'])->name('register');
@@ -56,7 +56,7 @@ Route::middleware('auth', 'role:admin')->group(function () {
     });
 });
 
-Route::get('/admin/dashboard',[DashboardController::class, 'index']);
+Route::get('/admin/dashboard', [DashboardController::class, 'index']);
 
 
 
