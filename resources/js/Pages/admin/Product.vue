@@ -1,153 +1,118 @@
-
-
-<script>
+<script setup>
+import { onMounted, ref } from 'vue';
+import Swal from 'sweetalert2'
 import { router } from '@inertiajs/vue3'
-import { useForm } from '@inertiajs/vue3'
-import { Link } from '@inertiajs/vue3'
-import { Popover, Modal, Toast } from 'bootstrap';
-import Table from '../../Components/Table.vue';
-import Layout from '../../Layouts/Layout.vue';
-import Card from '../../Components/Card.vue'
-import ModalComponent from '../../Components/ModalComponent.vue';
-import Pagination from '../../Components/Pagination.vue';
-export default {
-  components: {
-    Layout,
-    Card,
-    Table,
-    ModalComponent,
-    Link,
-    Pagination
-  },
-  data() {
-    return {
-      modal: '',
-      closeIt: true,
-      form:{
-        _method: 'PUT',
-        id: null,
-        name: null,
-        quantity: null,
-        price: null,
-        description: null,
-        image: null,
-        status: 'unverified'}
-      ,
-      title: '',
-      submitButton: '',
-      searchData: ''
-
-    };
-  },
-  props: {
-    products: Object
-  },
-  mounted() {
-    Array.from(document.querySelectorAll('button[data-bs-toggle="popover"]')).forEach(popoverNode => new Popover(popoverNode))
-    this.modal = new Modal(document.getElementById('modal'))
-  },
-
-  methods: {
-    formState(id, name, quantity, price, description) {
-      this.form.id = id
-      this.form.name = name,
-        this.form.quantity = quantity,
-        this.form.price = price,
-        this.form.description = description
-    },
-    showModal(data) {
-      if (data == 'add') {
-        this.modal.toggle()
-        this.title = "ADD PRODUCT"
-        this.submitButton = "ADD"
-      } else {
-        this.modal.toggle()
-        this.title = "UPDATE PRODUCT"
-        this.submitButton = "UPDATE"
-        this.formState(data.id, data.name, data.quantity, data.price, data.description)
-      }
-    },
-    submitSuccess(message) {
-      this.$swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.onmouseenter = this.$swal.stopTimer;
-          toast.onmouseleave = this.$swal.resumeTimer;
-        }
-      }).fire({
-        icon: 'success',
-        title: 'Product ' + message + ' success'
-      })
-    },
-
-    submitError(message) {
-      this.$swal({
-        title: "Oops Error !!!",
-        text: "Something went wrong! " + message,
-        icon: "error"
-      })
-    }
-
-    ,
-    submit(data) {
-      if (data == null) {
-        this.form._method = 'POST'
-       router.post('/admin/product',this.form, {
-          onSuccess: () => {
-            this.modal.toggle(),
-              this.submitSuccess('Added')
-          },
-          onError: () => {
-            this.submitError('It seems like Product already exists!')
-          },
-        })
+import { Popover, Modal } from 'bootstrap';
+import { submitSuccess, submitError } from '@/Alert';
 
 
-      } else {
-        router.post(`/admin/product/${data}`, this.form, {
-          image: this.form.image,
-          
-          onSuccess: () => {
-            this.modal.toggle(),
-              this.formState(null, null, null, null, null)
-            this.submitSuccess('Updated')
-          },
-          onError: () => {
-            this.submitError('')
-          },
-        })
-      }
-    }
-    ,
+import Table from '@/Components/Table.vue';
+import Layout from '@/Layouts/Layout.vue';
+import Card from '@/Components/Card.vue'
+import ModalComponent from '@/Components/ModalComponent.vue';
 
-    remove(id) {
-      this.$swal({
-        title: "Are you sure !!!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "YES"
-      }).then((result) => {
-        if (result.isConfirmed) {
-          router.delete(`/admin/product/${id}`, {
-            onSuccess: () => {
-              this.submitSuccess('Deleted')
-            },
-            onError: () => {
-              this.submitError('')
-            }
-          })
-        }
-      })
-    },
-    search(searchData) {
-      router.get(`/admin/product/?search=${searchData}`)
-    },
-  },
+
+const modal = ref('')
+const form = ref({
+  _method: 'PUT',
+  id: null,
+  name: null,
+  quantity: null,
+  price: null,
+  description: null,
+  image: null,
+  status: 'unverified'
+})
+
+const title = ref('')
+const submitButton = ref('')
+const searchData = ref('')
+
+const props = defineProps({
+  products: Object
+})
+
+onMounted(() => {
+  Array.from(document.querySelectorAll('button[data-bs-toggle="popover"]')).forEach(popoverNode =>
+    new Popover(popoverNode)),
+  modal.value = new Modal(document.getElementById('modal'))
+})
+
+
+const formState = (id, name, quantity, price, description) => {
+  form.value.id = id
+  form.value.name = name,
+    form.value.quantity = quantity,
+    form.value.price = price,
+    form.value.description = description
 }
+const showModal = (data) => {
+  if (data == 'add') {
+    modal.value.toggle()
+    title.value = "ADD PRODUCT"
+    submitButton.value = "ADD"
+  } else {
+    modal.value.toggle()
+    title.value = "UPDATE PRODUCT"
+    submitButton.value = "UPDATE"
+    formState(data.id, data.name, data.quantity, data.price, data.description)
+  }
+}
+
+
+const submit = (data) => {
+  if (data == null) {
+    form.value._method = 'POST'
+    router.post('/admin/product', form.value, {
+      onSuccess: () => {
+        modal.value.toggle(),
+        submitSuccess('Added')
+      },
+      onError: () => {
+        submitError('It seems like Product already exists!')
+      },
+    })
+  } else {
+    router.post(`/admin/product/${data}`, form.value, {
+      image: form.value.image,
+
+      onSuccess: () => {
+        modal.value.toggle(),
+         formState(null, null, null, null, null)
+       submitSuccess('Updated')
+      },
+      onError: () => {
+       submitError('')
+      },
+    })
+  }
+}
+
+
+const remove = (id) => {
+  Swal.fire({
+    title: "Are you sure !!!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "YES"
+  }).then((result) => {
+    if (result.isConfirmed) {
+      router.delete(`/admin/product/${id}`, {
+        onSuccess: () => {
+          submitSuccess('Deleted')
+        },
+        onError: () => {
+          submitError('')
+        }
+      })
+    }
+  })
+}
+
+const search = (searchData) => {
+  router.get(`/admin/product/?search=${searchData}`)
+}
+
 </script>
 
 
@@ -167,7 +132,7 @@ export default {
         <div class="mb-3">
           <label for="quantity" class="form-label">Product Quantity</label>
           <input id="quantity" v-model="form.quantity" type="number" class="form-control" name="quantity"
-            placeholder="Enter product quantity...."  onkeypress="return event.charCode>=48" min="1" required />
+            placeholder="Enter product quantity...." onkeypress="return event.charCode>=48" min="1" required />
         </div>
         <div class="mb-3">
           <label for="price" class="form-label">Product Price</label>
@@ -182,10 +147,11 @@ export default {
         <div class="mb-3">
           <label for="image" class="form-label">Product Image</label>
           <input id="image" @input="form.image = $event.target.files[0]" type="file" row="2" class="form-control"
-            name="image"/>
+            name="image" />
         </div>
         <input id="status" type="hidden" name="status" value="unverified">
-        <progress v-if="form.progress" :value="form.progress.percentage" max="100">{{ form.progress.percentage }}</progress>
+        <progress v-if="form.progress" :value="form.progress.percentage" max="100">{{ form.progress.percentage
+          }}</progress>
         <button type="submit" class="btn btn-primary w-100" name="submit">{{ submitButton }}</button>
       </form>
     </ModalComponent>
@@ -226,7 +192,7 @@ export default {
                   <td colspan="5">No Product Exist</td>
                 </tr>
                 <tr v-for="(product, index) in products.data " :key="product.id">
-                  <td>{{ index +1 }}</td>
+                  <td>{{ index + 1 }}</td>
                   <td>{{ product.name.toUpperCase() }} </td>
                   <td>{{ product.quantity }}</td>
                   <td>{{ product.price }} Tsh</td>
@@ -244,19 +210,9 @@ export default {
 
             </Table>
           </template>
-          <template v-slot:footer>
-
-            <!-- <Pagination :links="products.links" /> -->
-
-          </template>
-
 
         </Card>
       </div>
     </div>
   </Layout>
 </template>
-
-
-
-

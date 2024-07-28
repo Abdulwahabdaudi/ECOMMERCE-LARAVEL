@@ -13,25 +13,9 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ReceiptController;
 
-Route::get('/', function () {
-
-    $order = Order::latest()->get();
-
-    $cart =  $order[0]->items()->get();
-
-    $pdf = PDF::loadView('receipt', ['cart' => $cart])->setPaper([0, 0, 164, 447], 'portrait');
-
-    $pdf->setOptions(['isHtml5ParserEnabled' => true, 'isPhpEnabled' => true, 'isPhpEnabled' => true, 'isHtml5ParserEnabled' => true]);
-    $pdf->setOption('autoScriptToSize', true);
-    $pdf->render();
-    $height = $pdf->get_canvas()->get_height();
-
-    $pdf = PDF::loadView('receipt', ['cart' => $cart])->setPaper([0, 0, 164, $height], 'portrait');
-
-    $pdf->render();
-    return   $pdf->stream();
-})->name('index');
+Route::get('/receipt/{receiptId}', [ReceiptController::class, 'receipt'])->name('receipt');
 
 
 

@@ -53,6 +53,7 @@ class PosController extends Controller
             }
             // update only quantity
             $cart->pivot->quantity = $cart->pivot->quantity + 1;
+            $cart->pivot->price = $cart->pivot->quantity * $product->price;
             $cart->pivot->save();
         } else {
             if($product->quantity < 1) {
@@ -100,7 +101,6 @@ class PosController extends Controller
     public function deleteOne (Request $request)
     {
         $user = User::find(1);
-//dd($request);
         $user->products()->detach($request->products_id);
 
 

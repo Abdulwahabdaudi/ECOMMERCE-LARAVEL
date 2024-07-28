@@ -1,12 +1,10 @@
 import './bootstrap';
-import '../css/app.css';
 
 import { createApp, h, } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 
-import VueSweetalert2 from 'vue-sweetalert2';
 import * as bootstrap from 'bootstrap'
 import Chart from 'Chart.js/auto'
 
@@ -24,7 +22,6 @@ createInertiaApp({
     setup({ el, App, props, plugin }) {
         return createApp({ render: () => h(App, props) })
             .use(plugin)
-            .use(VueSweetalert2)
             .use(ZiggyVue, Ziggy)
             .mount(el);
     },

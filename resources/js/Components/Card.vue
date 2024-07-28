@@ -15,3 +15,25 @@
         </div>
     </div>
 </template>
+
+<style>
+.card {
+    margin-bottom: 1rem;
+    border-radius: 0.4rem;
+    font-weight: 500;
+}
+
+.card .card-header {
+    text-align: center;
+
+}
+
+.card .card-body {
+    padding-top: 0;
+}
+
+.card .card-body p {
+    font-weight: 900;
+    font-size: 2rem;
+}
+</style>

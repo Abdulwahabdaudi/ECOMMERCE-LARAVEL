@@ -1,5 +1,3 @@
-
-
 <template>
     <div class="table-responsive">
 
@@ -10,11 +8,11 @@
                 </tr>
             </thead>
             <tbody>
-                
-                    <slot name="body"></slot>
-                
+
+                <slot name="body"></slot>
+
             </tbody>
-       
+
         </table>
     </div>
 </template>

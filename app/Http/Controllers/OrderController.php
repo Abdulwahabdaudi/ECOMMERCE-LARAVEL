@@ -47,8 +47,8 @@ class OrderController extends Controller
             'day' => $day,
         ]);
 
-        $cart = $user->products()->get();
-        foreach ($cart as $item) {
+        $orderedProduct = $user->products()->get();
+        foreach ($orderedProduct as $item) {
             $order->items()->create([
 
                 'name' => $item->name,
@@ -60,6 +60,7 @@ class OrderController extends Controller
             $item->save();
         }
         $user->products()->detach();
+    
     }
 
     /**
