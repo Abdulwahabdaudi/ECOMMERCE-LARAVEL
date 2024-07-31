@@ -3,6 +3,7 @@
 
 use Inertia\Inertia;
 use App\Models\Order;
+use App\Models\Customer;
 use Illuminate\Support\Carbon;
 use Barryvdh\DomPDF\Facade\PDF;
 use Illuminate\Support\Facades\App;
@@ -11,9 +12,10 @@ use App\Http\Controllers\PosController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ReceiptController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ReceiptController;
 
 Route::get('/receipt/{receiptId}', [ReceiptController::class, 'receipt'])->name('receipt');
 
@@ -61,3 +63,8 @@ Route::delete('/admin/product/{product}', [ProductController::class, 'destroy'])
 Route::get('/admin/order', [OrderController::class, 'index'])->name('admin.order');
 Route::post('/admin/order', [OrderController::class, 'store']);
 Route::delete('/admin/order/{order}', [OrderController::class, 'destroy']);
+
+
+Route::get('/admin/customer', [CustomerController::class, 'index'])->name('admin.customer');
+Route::post('/admin/customer', [CustomerController::class, 'store']);
+Route::delete('/admin/customer/{customer}', [CustomerController::class, 'destroy']);

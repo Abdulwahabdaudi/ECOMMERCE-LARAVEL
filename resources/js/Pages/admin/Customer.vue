@@ -25,7 +25,7 @@ const title = ref('')
 const submitButton = ref('')
 
 const props = defineProps({
-  orders: Object
+  customers: Object
 })
 
 onMounted(() => {
@@ -54,6 +54,8 @@ const submit = (data) => {
         submitError('It seems like Product already exists!')
       },
     })
+
+
   } else {
     router.put(`/admin/product/${data}`, form.value, {
       onSuccess: () => {
@@ -76,7 +78,7 @@ const remove = (id) => {
     confirmButtonText: "YES"
   }).then((result) => {
     if (result.isConfirmed) {
-      router.delete(`/admin/order/${id}`, {
+      router.delete(`/admin/customer/${id}`, {
         onSuccess: () => {
           submitSuccess('Deleted')
         },
@@ -130,7 +132,7 @@ const remove = (id) => {
         <Card class="">
           <template v-slot:head>
             <div class="d-flex justify-content-between align-item-center">
-              <div class="my-auto">ORDERS</div>
+              <div class="my-auto">CUSTOMERS</div>
               <div>
               </div>
             </div>
@@ -140,22 +142,22 @@ const remove = (id) => {
               <template v-slot:head>
 
                 <td>S/N</td>
-                <td>Amount</td>
-                <td>Status</td>
-
-                <td>Action</td>
+                <td>NAME</td>
+                <td>PHONE</td>
+                <td>EMAIL</td>
+                <td>ACTION</td>
               </template>
               <template v-slot:body>
-                <tr v-show="orders.length == 0" class="text-center w-100">
+                <tr v-show="customers.length == 0" class="text-center w-100">
                   <td colspan="5">No Order Exist</td>
                 </tr>
-                <tr v-for="(order, index) in orders " :key="order.id">
+                <tr v-for="(customer, index) in customers " :key="customer.id">
                   <td>{{ index + 1 }}</td>
-                  <td>{{ order.customer_name }}</td>
-                  <td>{{ order.amount }} Tsh</td>
-                  <td>{{ order.status }}</td>
+                  <td>{{ customer.name }}</td>
+                  <td>{{ customer.phone }}</td>
+                  <td>{{ customer.email }}</td>
                   <td class="d-flex justify-content-center gap-2">
-                    <button @click="remove(order.id)" class="btn btn-danger" data-bs-toggle="popover"
+                    <button @click="remove(customer.id)" class="btn btn-danger" data-bs-toggle="popover"
                       data-bs-trigger="hover" data-bs-placement="bottom" data-bs-title="Delete"><i
                         class="bi bi-trash"></i></button>
                   </td>

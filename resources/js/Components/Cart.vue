@@ -1,22 +1,52 @@
 <script setup>
 import { router } from '@inertiajs/vue3';
-import { defineProps, computed, ref } from 'vue';
+import { defineProps, computed, ref, onMounted } from 'vue';
 import { submitSuccess, submitError } from '@/Alert';
+import { Modal } from 'bootstrap';
+import Swal from 'sweetalert2'
 
 
 import Card from './Card.vue'
 import Table from './Table.vue'
+import ModalComponent from '@/Components/ModalComponent.vue';
+
+
+import Multiselect from 'vue-multiselect'
 
 const props = defineProps({
     cartProducts: Array,
+    customers: Object,
 })
+
+const value = ref('walking customer')
+const options = ref([])
+
+const modal = ref('')
+
+
+const title = ref('ORDER DETAILS')
+const submitButton = ref('ADD ORDER')
+
+
 
 const orderData = ref({
     totalPrice: null,
+    customerName: null
 })
 const cartData = ref({
     product_id: null,
     quantity: null
+})
+
+
+options.value = props.customers.map((item) => {
+    return item.name
+})
+
+
+
+onMounted(() => {
+    modal.value = new Modal(document.getElementById('modal'))
 })
 
 const cartTotal = computed(() => {
@@ -25,18 +55,42 @@ const cartTotal = computed(() => {
     }, 0);
 })
 
+
 const createOrder = () => {
+    if (cartTotal.value <= 0) {
+        Swal.fire({
+            title: "No order",
+            icon: "warning",
+            confirmButtonText: "OK"
+        })
+    } else {
+        modal.value.toggle()
+    }
+}
+
+
+const submitOrder = (customerName) => {
+
     orderData.value.totalPrice = cartTotal
+    orderData.value.customerName = customerName
+
     router.post('/admin/order', orderData.value, {
         onSuccess: () => {
+            modal.value.toggle()
             submitSuccess('Order')
+
         },
         onError: (error) => {
+            modal.value.toggle()
             submitError(error.message)
         },
     })
 
 }
+
+
+
+
 
 const emptyCart = () => {
     router.delete('/admin/pos/empty', {
@@ -149,5 +203,29 @@ const removeCartItem = (data) => {
 
             </template>
         </Card>
+
     </div>
+
+
+    <ModalComponent>
+        <form class="w-100" @submit.prevent="submitOrder(value)">
+
+            <h1 class="text-center pt-2 ">{{ title }}</h1>
+
+            <div><label class="input-group-text">Select customer</label>
+                <Multiselect v-model="value" :options="options" :searchable="true" :close-on-select="true"
+                    :show-labels="false" placeholder="Pick a value"></Multiselect>
+            </div>
+
+
+
+            <input id="status" type="hidden" name="status" value="unverified">
+            <button type="submit" class="btn btn-primary w-100" name="submit">{{ submitButton }}</button>
+        </form>
+    </ModalComponent>
 </template>
+
+
+<style>
+@import 'vue-multiselect/dist/vue-multiselect.css';
+</style>

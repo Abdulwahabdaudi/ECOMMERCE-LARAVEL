@@ -15,9 +15,6 @@ defineProps({
         <div class="modal fade" tabindex="-1" id="modal" arial-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <!-- <div class="modal-header">
-                    <h5 class="modal-title text-center">UPDATE</h5> 
-                </div> -->
                     <div class="modal-body">
                         <slot></slot>
                     </div>

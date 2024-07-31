@@ -14,7 +14,6 @@ defineProps({
 
             <div @click="sidebarToggle" class="sidebar-toggle"><i class="bi bi-text-indent-right"></i></div>
         </div>
-        <!-- <hr> -->
         <div class="sidebar-body">
             <ul>
                 <Link href="/admin/dashboard" :class="{ 'active': $page.url === '/admin/dashboard' }">
@@ -29,6 +28,12 @@ defineProps({
                 <Link :href="route('admin.order')" :class="{ 'active': $page.url.startsWith('/admin/order') }">
                 <li>Order</li>
                 </Link>
+                <Link :href="route('admin.customer')" :class="{ 'active': $page.url.startsWith('/admin/customer') }">
+                <li>Customer</li>
+                </Link>
+                <!-- <Link :href="route('admin.report')" :class="{ 'active': $page.url.startsWith('/admin/report') }">
+                <li>Report</li>
+                </Link> -->
             </ul>
         </div>
     </aside>
@@ -41,7 +46,7 @@ aside {
   width: 12rem;
   background-color: var(--color-primary);
   position: fixed;
-  
+
 }
 aside .sidebar-header {
   display: flex;
@@ -155,7 +160,7 @@ aside a:hover {
     cursor: pointer;
     color: var(--c-blue);
     border-color: rgb(199, 199, 199);
-    
+
   }
 
   nav .sidebar-toggle {

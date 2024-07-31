@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Inertia\Inertia;
 use App\Models\Product;
+use App\Models\Customer;
 use Illuminate\Http\Request;
 
 class PosController extends Controller
@@ -18,9 +19,13 @@ class PosController extends Controller
         $products = Product::all();
         $user = User::find(1);
         $cartProducts = $user->products()->get();
+
+        $customers = Customer::latest()->get();
+
         return Inertia::render('admin/Pos', [
             'products' => $products,
-            'cartProducts' => $cartProducts
+            'cartProducts' => $cartProducts,
+            'customers' => $customers
         ]);
     }
 

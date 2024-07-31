@@ -8,20 +8,20 @@ import Card from '@/Components/Card.vue'
 import Cart from '@/Components/Cart.vue';
 
 
-
 const itemToCart = ref({
     id: null
 })
 
-
 const props = defineProps({
     products: Object,
+    customers: Object,
     cartProducts: {
         type: Array,
         required: true,
     },
     message: String,
 })
+
 
 const submit = (data) => {
     itemToCart.value.id = data
@@ -57,7 +57,8 @@ const submit = (data) => {
                                     <template v-slot:body>
 
                                         <img class="d-flex w-50  border border-primary mx-auto my-2"
-                                            :src="!product.image ? '/logo.jpg' : `/storage/${product.image}`" alt="image">
+                                            :src="!product.image ? '/logo.jpg' : `/storage/${product.image}`"
+                                            alt="image">
 
                                         <h5 class="price text-center text-truncate">{{ product.price }} TSH</h5>
                                         <button class="d-flex btn btn-primary mx-auto mb-2">ADD
@@ -72,17 +73,18 @@ const submit = (data) => {
             </div>
 
 
-            <Cart :cartProducts="props.cartProducts"  />
+            <Cart :cartProducts="props.cartProducts"
+            :customers="customers"
+            />
 
         </div>
     </Layout>
 </template>
 
 <style>
-
 .cart img {
-  height: 80px;
-  width: 30px;
-  border-radius: 1rem;
+    height: 80px;
+    width: 30px;
+    border-radius: 1rem;
 }
 </style>

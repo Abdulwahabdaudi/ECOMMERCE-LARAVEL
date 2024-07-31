@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -17,6 +18,7 @@ class DashboardController extends Controller
     {
         $totalProducts = Product::get()->count();
         $totalOrders = Order::get()->count();
+        $totalCustomers = Customer::get()->count();
         $totalSales = Order::get();
 
         $date = Carbon::now()->subDays(7);
@@ -38,6 +40,7 @@ class DashboardController extends Controller
         return Inertia::render('admin/Dashboard', [
             'totalProducts' => $totalProducts,
             'totalOrders' => $totalOrders,
+            'totalCustomers' => $totalCustomers,
             'totalSales' => $totalSales,
             'salesData' => array_values($salesData),
             'pos' => route('admin.pos')

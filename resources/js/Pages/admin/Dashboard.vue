@@ -34,6 +34,7 @@ const sales = computed(() => {
 const props = defineProps({
   totalProducts: Number,
   totalOrders: Number,
+  totalCustomers: Number,
   totalSales: Array,
   salesData: Object
 })
@@ -72,7 +73,7 @@ const props = defineProps({
             CUSTOMERS
           </template>
           <template v-slot:body>
-            <p class="ms-2">20</p>
+            <p class="ms-2">{{ totalCustomers }}</p>
           </template>
         </Card>
       </div>

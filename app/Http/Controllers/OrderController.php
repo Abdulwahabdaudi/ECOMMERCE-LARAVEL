@@ -38,12 +38,14 @@ class OrderController extends Controller
     public function store(Request $request)
     {
 
+
         $date = Carbon::now();
         $day = $date->englishDayOfWeek;
         $user = User::find(1);
         $order = Order::create([
             'user_id' => 1,
             'amount'  => $request->totalPrice,
+            'customer_name' => $request->customerName,
             'day' => $day,
         ]);
 

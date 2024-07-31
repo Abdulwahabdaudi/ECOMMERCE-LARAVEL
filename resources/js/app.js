@@ -7,6 +7,8 @@ import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 
 import * as bootstrap from 'bootstrap'
 import Chart from 'Chart.js/auto'
+import Multiselect from 'vue-multiselect'
+
 
 import 'sweetalert2/dist/sweetalert2.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css'
